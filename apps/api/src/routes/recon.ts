@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import multer from 'multer';
-import { startReconnaissance } from '../services/reconService';
+import { startReconnaissance } from '../services/reconService.js';
 
-const router = Router();
+const router: ReturnType<typeof Router> = Router();
 const upload = multer({ 
   storage: multer.memoryStorage(),
   limits: { fileSize: 10 * 1024 * 1024 }

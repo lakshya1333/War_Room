@@ -1,5 +1,5 @@
 import Docker from 'dockerode';
-import { ExecutionResult } from '../types';
+import type { ExecutionResult } from '../types/index.js';
 
 export class DockerService {
   private docker: Docker;
@@ -55,7 +55,7 @@ export class DockerService {
           reject(new Error('Execution timeout (30s)'));
         }, 30000);
 
-        stream.on('data', (chunk) => {
+        stream.on('data', (chunk: Buffer) => {
           const str = chunk.toString();
           if (str.includes('stderr')) {
             errors += str;
@@ -69,7 +69,7 @@ export class DockerService {
           resolve();
         });
 
-        stream.on('error', (err) => {
+        stream.on('error', (err: Error) => {
           clearTimeout(timeout);
           reject(err);
         });
@@ -83,7 +83,7 @@ export class DockerService {
       return {
         success: true,
         output: output || 'Script executed successfully (no output)',
-        errors: errors || undefined,
+        errors: errors ? errors : undefined,
         duration
       };
 
@@ -100,7 +100,7 @@ export class DockerService {
   async cleanup() {
     try {
       const containers = await this.docker.listContainers({ all: true });
-      const warRoomContainers = containers.filter(c => 
+      const warRoomContainers = containers.filter((c: any) => 
         c.Image.includes('python') || c.Image.includes('alpine')
       );
 

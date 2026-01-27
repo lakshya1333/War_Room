@@ -3,8 +3,7 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import dotenv from 'dotenv';
-import multer from 'multer';
-import { reconRouter } from './routes/recon';
+import { reconRouter } from './routes/recon.js';
 
 dotenv.config();
 
@@ -15,11 +14,6 @@ const io = new Server(httpServer, {
     origin: process.env.WEB_URL || 'http://localhost:3000',
     methods: ['GET', 'POST']
   }
-});
-
-const upload = multer({ 
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB
 });
 
 app.use(cors());

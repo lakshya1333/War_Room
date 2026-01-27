@@ -1,4 +1,4 @@
-export interface AttackTreeNode {
+export type AttackTreeNode = {
   id: string;
   name: string;
   description: string;
@@ -7,7 +7,7 @@ export interface AttackTreeNode {
   status?: 'pending' | 'analyzing' | 'complete';
 }
 
-export interface ThinkingStep {
+export type ThinkingStep = {
   id: string;
   step: number;
   thought: string;
@@ -15,7 +15,7 @@ export interface ThinkingStep {
   timestamp: number;
 }
 
-export interface Exploit {
+export type Exploit = {
   id: string;
   name: string;
   description: string;
@@ -25,9 +25,9 @@ export interface Exploit {
   category: string;
 }
 
-export interface ExecutionResult {
+export type ExecutionResult = {
   success: boolean;
   output: string;
-  errors?: string;
+  errors?: string | undefined;
   duration: number;
 }

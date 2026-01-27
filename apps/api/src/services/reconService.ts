@@ -1,9 +1,9 @@
 import { Server } from 'socket.io';
-import { GeminiService } from './geminiService';
-import { DockerService } from './dockerService';
-import { AttackTreeNode } from '../types';
+import { GeminiService } from './geminiService.js';
+import { DockerService } from './dockerService.js';
+import type { AttackTreeNode } from '../types/index.js';
 
-interface ReconParams {
+type ReconParams = {
   sessionId: string;
   url?: string;
   repo?: string;
@@ -11,7 +11,7 @@ interface ReconParams {
     buffer: Buffer;
     mimetype: string;
     originalname: string;
-  };
+  } | undefined;
   io: Server;
 }
 
@@ -36,7 +36,7 @@ export async function startReconnaissance(params: ReconParams) {
     });
 
     const target = url || repo || 'unknown';
-    const attackTree = await gemini.generateAttackTree(target, image, (node) => {
+    const attackTree = await gemini.generateAttackTree(target, image, (node: AttackTreeNode) => {
       io.emit('recon:tree-update', { sessionId, node });
     });
 
@@ -49,7 +49,7 @@ export async function startReconnaissance(params: ReconParams) {
       message: 'Deep analysis in progress...'
     });
 
-    const thinkingSteps = await gemini.analyzeWithThinking(target, image, attackTree, (step) => {
+    const thinkingSteps = await gemini.analyzeWithThinking(target, image, attackTree, (step: any) => {
       io.emit('recon:thinking', { sessionId, step });
     });
 
@@ -60,7 +60,7 @@ export async function startReconnaissance(params: ReconParams) {
       message: 'Generating exploit scripts...'
     });
 
-    const exploits = await gemini.generateExploits(target, attackTree, thinkingSteps, (exploit) => {
+    const exploits = await gemini.generateExploits(target, attackTree, thinkingSteps, (exploit: any) => {
       io.emit('recon:exploit', { sessionId, exploit });
     });
 

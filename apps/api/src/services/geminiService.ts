@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { AttackTreeNode, ThinkingStep, Exploit } from '../types';
+import type { AttackTreeNode, ThinkingStep, Exploit } from '../types/index.js';
 
 export class GeminiService {
   private genAI: GoogleGenerativeAI;
@@ -107,7 +107,7 @@ Provide your detailed thinking process.`;
       const response = result.response.text();
       
       const steps: ThinkingStep[] = [];
-      const thoughts = response.split('\n\n').filter(t => t.trim());
+      const thoughts = response.split('\n\n').filter((t: string) => t.trim());
       
       for (let i = 0; i < thoughts.length; i++) {
         const step: ThinkingStep = {
