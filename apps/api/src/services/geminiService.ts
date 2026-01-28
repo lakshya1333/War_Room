@@ -8,9 +8,9 @@ export class GeminiService {
 
   constructor() {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-    this.model = this.genAI.getGenerativeModel({ model: 'gemini-2.0-flash-exp' });
+    this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     this.thinkingModel = this.genAI.getGenerativeModel({ 
-      model: 'gemini-2.0-flash-thinking-exp-01-21'
+      model: 'gemini-1.5-flash'
     });
   }
 
