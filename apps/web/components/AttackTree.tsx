@@ -29,12 +29,23 @@ const severityConfig = {
   high: { color: 'text-orange-500', bg: 'bg-orange-500/10', border: 'border-orange-500/50', glow: 'shadow-orange-500/20' },
   medium: { color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/50', glow: 'shadow-yellow-500/20' },
   low: { color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/50', glow: 'shadow-blue-500/20' }
+} as const;
+
+// Default config for unknown severity levels
+const defaultConfig = { 
+  color: 'text-zinc-500', 
+  bg: 'bg-zinc-500/10', 
+  border: 'border-zinc-500/50', 
+  glow: 'shadow-zinc-500/20' 
 };
 
 function TreeNode({ node, depth = 0 }: { node: AttackTreeNode; depth?: number }) {
   const [isExpanded, setIsExpanded] = useState(true);
-  const Icon = severityIcons[node.severity];
-  const config = severityConfig[node.severity];
+  
+  // Normalize severity and provide fallback
+  const normalizedSeverity = (node.severity || 'low').toLowerCase() as keyof typeof severityConfig;
+  const Icon = severityIcons[normalizedSeverity] || Info;
+  const config = severityConfig[normalizedSeverity] || defaultConfig;
 
   return (
     <div className="relative">
@@ -99,8 +110,8 @@ function TreeNode({ node, depth = 0 }: { node: AttackTreeNode; depth?: number })
             exit={{ opacity: 0, height: 0 }}
             className="relative ml-8 mt-4 space-y-4 border-l-2 border-zinc-800/50 pl-8"
           >
-            {node.children.map(child => (
-              <TreeNode key={child.id} node={child} depth={depth + 1} />
+            {node.children.map((child, index) => (
+              <TreeNode key={child.id || `child-${depth}-${index}`} node={child} depth={depth + 1} />
             ))}
           </motion.div>
         )}
