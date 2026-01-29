@@ -37,11 +37,11 @@ export function ReconInput({ onLaunch, isLoading }: ReconInputProps) {
   };
 
   return (
-    <div className="cyber-border relative overflow-hidden rounded-lg bg-zinc-950/80 p-1 backdrop-blur-xl">
+    <div className="cyber-border relative overflow-hidden rounded-lg bg-zinc-950/80 p-1 backdrop-blur-xl z-10">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
       
-      <div className="p-6">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="p-6 relative z-10">
+        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/10 text-red-500">
               <Command className="h-6 w-6" />
@@ -79,7 +79,7 @@ export function ReconInput({ onLaunch, isLoading }: ReconInputProps) {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={mode}
@@ -127,10 +127,10 @@ export function ReconInput({ onLaunch, isLoading }: ReconInputProps) {
                   <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Upload Intelligence</label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="group relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed border-zinc-800 bg-zinc-900/30 py-12 transition-all hover:border-red-500/50 hover:bg-zinc-900/50"
+                    className="group relative flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-zinc-800 bg-zinc-900/30 py-8 transition-all hover:border-red-500/50 hover:bg-zinc-900/50"
                   >
-                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-zinc-800 group-hover:bg-zinc-800/80 group-hover:scale-110 transition-all duration-300">
-                      <Upload className="h-8 w-8 text-zinc-400 group-hover:text-red-500" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800 group-hover:bg-zinc-800/80 group-hover:scale-110 transition-all duration-300">
+                      <Upload className="h-6 w-6 text-zinc-400 group-hover:text-red-500" />
                     </div>
                     <div className="text-center">
                       <p className="text-sm font-medium text-zinc-300">

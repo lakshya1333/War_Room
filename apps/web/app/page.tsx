@@ -69,9 +69,9 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="container mx-auto p-6 space-y-8">
+      <main className="container mx-auto p-6 pb-16 space-y-8">
         {/* Top Grid: Input & Thinking */}
-        <div className="grid gap-6 lg:grid-cols-12 h-full">
+        <div className="grid gap-6 lg:grid-cols-12">
           {/* Left Column: Input & Tree (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
             <ReconInput onLaunch={startRecon} isLoading={isLoading} />
@@ -99,7 +99,7 @@ export default function Home() {
       </main>
       
       {/* Footer / Status Line */}
-      <footer className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-black/80 px-4 py-1 backdrop-blur text-[10px] font-mono text-zinc-600 flex justify-between">
+      <footer className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-black/80 px-4 py-1 backdrop-blur text-[10px] font-mono text-zinc-600 flex justify-between">
         <div>
           SESSION_ID: {sessionId} // GEMINI_3_PRO_PREVIEW // SECURE_CONNECTION
         </div>
