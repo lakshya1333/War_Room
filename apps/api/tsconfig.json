@@ -18,9 +18,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
     "exactOptionalPropertyTypes": false,
     "noUncheckedIndexedAccess": false
   },
