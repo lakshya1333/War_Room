@@ -1,0 +1,33 @@
+# Render ignore file - files not needed for deployment
+
+# Development
+.env
+.env.*
+*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Temporary
+temp/
+tmp/
+.cache/
+
+# Documentation (except DEPLOYMENT.md)
+docs/
+*.md
+!DEPLOYMENT.md

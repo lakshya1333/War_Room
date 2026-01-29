@@ -1,0 +1,33 @@
+services:
+  # API Service
+  - type: web
+    name: war-room-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm build --filter=api
+    startCommand: node apps/api/src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: GEMINI_API_KEY
+        sync: false  # Add this in Render dashboard
+      - key: WEB_URL
+        sync: false  # Set to your frontend URL after web service is created
+    healthCheckPath: /health
+
+  # Web Service  
+  - type: web
+    name: war-room-web
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install && pnpm build --filter=web
+    startCommand: cd apps/web && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        sync: false  # Set to your API URL after api service is created
