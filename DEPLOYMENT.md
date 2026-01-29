@@ -26,7 +26,7 @@ git push origin main
 3. Settings:
    - **Name:** war-room-api
    - **Root Directory:** (leave blank)
-   - **Build Command:** `pnpm install && pnpm build --filter=api`
+   - **Build Command:** `cd apps/api && pnpm install --prod=false && pnpm build`
    - **Start Command:** `node apps/api/src/index.js`
    - **Plan:** Free
 
@@ -36,8 +36,8 @@ git push origin main
 3. Settings:
    - **Name:** war-room-web
    - **Root Directory:** (leave blank)
-   - **Build Command:** `pnpm install && pnpm build --filter=web`
-   - **Start Command:** `cd apps/web && npm start`
+   - **Build Command:** `cd apps/web && pnpm install --prod=false && pnpm build`
+   - **Start Command:** `cd apps/web && pnpm start`
    - **Plan:** Free
 
 ### 3. Configure Environment Variables
