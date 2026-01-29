@@ -27,7 +27,7 @@ git push origin main
    - **Name:** war-room-api
    - **Root Directory:** (leave blank)
    - **Build Command:** `cd apps/api && pnpm install --prod=false && pnpm build`
-   - **Start Command:** `node apps/api/src/index.js`
+   - **Start Command**: `node apps/api/dist/index.js`
    - **Plan:** Free
 
 **Web Service:**
