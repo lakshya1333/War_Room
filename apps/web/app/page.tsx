@@ -5,6 +5,7 @@ import { ReconInput } from '@/components/ReconInput';
 import { AttackTree } from '@/components/AttackTree';
 import { ThinkingDisplay } from '@/components/ThinkingDisplay';
 import { ResultsDashboard } from '@/components/ResultsDashboard';
+import { DownloadReport } from '@/components/DownloadReport';
 import { useRecon } from '@/hooks/useRecon';
 import { Shield, Target, Activity, Terminal, Crosshair } from 'lucide-react';
 
@@ -19,6 +20,10 @@ export default function Home() {
     thinkingSteps, 
     exploits,
     executionResults,
+    gitInfo,
+    htmlReport,
+    markdownReport,
+    targetName,
     isLoading 
   } = useRecon();
 
@@ -93,6 +98,13 @@ export default function Home() {
                    <ResultsDashboard exploits={exploits} results={executionResults} />
                  </div>
               </div>
+            )}
+            {(htmlReport || markdownReport) && (
+              <DownloadReport 
+                htmlReport={htmlReport} 
+                markdownReport={markdownReport}
+                targetName={targetName}
+              />
             )}
           </div>
         </div>

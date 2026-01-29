@@ -1,7 +1,9 @@
 import { Server } from 'socket.io';
 import { GeminiService } from './geminiService.js';
 import { DockerService } from './dockerService.js';
-import type { AttackTreeNode } from '../types/index.js';
+import { GitService } from './gitService.js';
+import { ReportService } from './reportService.js';
+import type { AttackTreeNode, SecurityReport, GitRepoInfo } from '../types/index.js';
 
 type ReconParams = {
   sessionId: string;
@@ -27,18 +29,52 @@ export async function startReconnaissance(params: ReconParams) {
 
     const gemini = new GeminiService();
     const docker = new DockerService();
+    const gitService = new GitService();
+    const reportService = new ReportService();
+
+    const target = url || repo || 'unknown';
+    let gitInfo: GitRepoInfo | undefined;
+
+    // Phase 0: Git Repository Analysis (if applicable)
+    if (repo) {
+      try {
+        io.emit('recon:status', { 
+          sessionId, 
+          status: 'scanning',
+          message: 'Analyzing Git repository...'
+        });
+        
+        gitInfo = await gitService.analyzeRepository(repo);
+        
+        io.emit('recon:git-info', { 
+          sessionId, 
+          gitInfo: {
+            totalFiles: gitInfo.files.length,
+            technologies: gitInfo.technologies,
+            hasSecrets: gitInfo.secretsFound,
+            packageFiles: gitInfo.packageFiles.length,
+            configFiles: gitInfo.configFiles.length
+          }
+        });
+      } catch (error: any) {
+        console.error('Git analysis error:', error);
+        io.emit('recon:warning', { 
+          sessionId, 
+          message: `Could not analyze repository: ${error.message}` 
+        });
+      }
+    }
 
     // Phase 1: Initial Analysis
     io.emit('recon:status', { 
       sessionId, 
       status: 'analyzing',
-      message: 'Analyzing target...'
+      message: 'Analyzing target security posture...'
     });
 
-    const target = url || repo || 'unknown';
     const attackTree = await gemini.generateAttackTree(target, image, (node: AttackTreeNode) => {
       io.emit('recon:tree-update', { sessionId, node });
-    });
+    }, gitInfo);
 
     io.emit('recon:tree-complete', { sessionId, tree: attackTree });
 
@@ -95,13 +131,52 @@ export async function startReconnaissance(params: ReconParams) {
       }
     }
 
-    // Phase 5: Complete
+    // Phase 5: Generate Reports
+    io.emit('recon:status', { 
+      sessionId, 
+      status: 'reporting',
+      message: 'Generating security reports...'
+    });
+
+    const report: SecurityReport = {
+      sessionId,
+      target,
+      timestamp: Date.now(),
+      summary: {
+        criticalIssues: attackTree.filter(n => n.severity === 'critical').length,
+        highIssues: attackTree.filter(n => n.severity === 'high').length,
+        mediumIssues: attackTree.filter(n => n.severity === 'medium').length,
+        lowIssues: attackTree.filter(n => n.severity === 'low').length,
+      },
+      attackTree,
+      exploits,
+      recommendations: [
+        'Address critical vulnerabilities immediately',
+        'Implement security headers and CORS policies',
+        'Review and update dependencies regularly',
+        'Enable security monitoring and logging',
+        'Conduct regular penetration testing'
+      ]
+    };
+
+    const htmlReport = reportService.generateHTMLReport(report);
+    const markdownReport = reportService.generateMarkdownReport(report);
+
+    io.emit('recon:reports', {
+      sessionId,
+      html: htmlReport,
+      markdown: markdownReport
+    });
+
+    // Phase 6: Complete
     io.emit('recon:complete', { 
       sessionId,
       summary: {
         target,
         attackTreeNodes: attackTree.length,
         exploitsGenerated: exploits.length,
+        criticalIssues: report.summary.criticalIssues,
+        highIssues: report.summary.highIssues,
         timestamp: new Date().toISOString()
       }
     });

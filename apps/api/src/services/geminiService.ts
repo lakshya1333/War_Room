@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { AttackTreeNode, ThinkingStep, Exploit } from '../types/index.js';
+import type { AttackTreeNode, ThinkingStep, Exploit, CodeSnippet, GitRepoInfo } from '../types/index.js';
 
 export class GeminiService {
   private genAI: GoogleGenerativeAI;
@@ -17,27 +17,69 @@ export class GeminiService {
   async generateAttackTree(
     target: string, 
     image?: { buffer: Buffer; mimetype: string; originalname: string },
-    onNodeUpdate?: (node: AttackTreeNode) => void
+    onNodeUpdate?: (node: AttackTreeNode) => void,
+    gitInfo?: GitRepoInfo
   ): Promise<AttackTreeNode[]> {
-    const prompt = `You are a cybersecurity expert performing reconnaissance on a target: ${target}
+    const gitContext = gitInfo ? `
+REPOSITORY ANALYSIS:
+- Repository: ${gitInfo.url}
+- Technologies Detected: ${gitInfo.technologies.join(', ')}
+- Total Files: ${gitInfo.files.length}
+- Package Files: ${gitInfo.packageFiles.join(', ')}
+- Configuration Files: ${gitInfo.configFiles.join(', ')}
+- Potential Secrets: ${gitInfo.secretsFound ? 'YES ⚠️' : 'NO'}
 
-${image ? 'An image/screenshot has been provided for additional context.' : ''}
+KEY FILES TO ANALYZE:
+${gitInfo.files.slice(0, 20).join('\n')}\n` : '';
 
-Generate a comprehensive attack tree with potential vulnerabilities and attack vectors.
-For each node, provide:
-1. A clear name
-2. Detailed description
-3. Severity level (critical, high, medium, low)
-4. Child nodes for sub-attacks
+    const prompt = `You are an elite offensive security researcher and penetration tester analyzing: ${target}
 
-Output as JSON array of attack tree nodes with this structure:
-{
+${image ? '📸 VISUAL CONTEXT: A screenshot/image has been provided for additional reconnaissance.\n' : ''}
+${gitContext}
+
+MISSION: Conduct a comprehensive security assessment and generate a detailed attack tree.
+
+For EACH vulnerability/attack vector you identify, provide:
+1. ✓ Clear, actionable name
+2. ✓ Detailed technical description with attack methodology
+3. ✓ Severity: critical/high/medium/low
+4. ✓ Specific file paths affected (if analyzing code)
+5. ✓ Code snippets showing vulnerable sections (with line numbers)
+6. ✓ CVE IDs if applicable
+7. ✓ Concrete remediation steps
+8. ✓ Child nodes for multi-stage attacks
+
+FOCUS AREAS:
+- Authentication & Authorization flaws
+- Injection vulnerabilities (SQL, XSS, Command, etc.)
+- Security misconfigurations
+- Sensitive data exposure
+- API security issues
+- Dependencies with known vulnerabilities
+- Secrets/credentials in code
+- CORS & CSRF vulnerabilities
+- Business logic flaws
+
+Output as JSON array following this EXACT structure:
+[{
   "id": "unique_id",
   "name": "Attack Vector Name",
-  "description": "Detailed description",
-  "severity": "high",
+  "description": "Detailed technical description of the vulnerability and exploitation method",
+  "severity": "critical|high|medium|low",
+  "affectedFiles": ["path/to/file.js", "path/to/another.py"],
+  "codeSnippets": [{
+    "file": "path/to/vulnerable.js",
+    "lineStart": 45,
+    "lineEnd": 52,
+    "code": "actual code snippet here",
+    "issue": "explanation of what's wrong"
+  }],
+  "cve": "CVE-2024-XXXX",
+  "remediation": "Step-by-step fix instructions",
   "children": []
-}`;
+}]
+
+Be thorough, technical, and prioritize HIGH-IMPACT vulnerabilities.`;
 
     try {
       let parts: any[] = [{ text: prompt }];
@@ -76,7 +118,7 @@ Output as JSON array of attack tree nodes with this structure:
       return [{
         id: 'error',
         name: 'Analysis Error',
-        description: 'Failed to generate attack tree',
+        description: 'Failed to generate attack tree. Please check your input and try again.',
         severity: 'low'
       }];
     }
@@ -88,33 +130,57 @@ Output as JSON array of attack tree nodes with this structure:
     attackTree: AttackTreeNode[],
     onThinkingStep?: (step: ThinkingStep) => void
   ): Promise<ThinkingStep[]> {
-    const prompt = `As a penetration testing expert, analyze this target: ${target}
+    const criticalCount = attackTree.filter(n => n.severity === 'critical').length;
+    const highCount = attackTree.filter(n => n.severity === 'high').length;
+    
+    const prompt = `As an expert penetration tester, perform deep analysis on: ${target}
 
-Attack tree found:
-${JSON.stringify(attackTree, null, 2)}
+DISCOVERED VULNERABILITIES:
+${JSON.stringify(attackTree.map(n => ({
+  name: n.name,
+  severity: n.severity,
+  description: n.description,
+  files: n.affectedFiles,
+  cve: n.cve
+})), null, 2)}
 
-Think through:
-1. The most critical vulnerabilities
-2. Exploitation difficulty and likelihood
-3. Potential impact
-4. Recommended attack sequence
-5. Defense mechanisms to bypass
+SEVERITY BREAKDOWN:
+🔴 Critical: ${criticalCount}
+🟠 High: ${highCount}
+🟡 Medium: ${attackTree.filter(n => n.severity === 'medium').length}
+🔵 Low: ${attackTree.filter(n => n.severity === 'low').length}
 
-Provide your detailed thinking process.`;
+DEEP ANALYSIS REQUIREMENTS:
+1. Rank vulnerabilities by CVSS score and exploitability
+2. Identify attack chains (combining multiple vulns)
+3. Assess real-world impact and likelihood
+4. Determine if exploits are publicly available
+5. Evaluate defense mechanisms in place
+6. Recommend prioritized remediation roadmap
+7. Identify quick wins vs. long-term fixes
+8. Consider business context and risk
+
+Think step-by-step and provide tactical security insights.
+Format your response with clear sections using ##.`;
 
     try {
       const result = await this.thinkingModel.generateContent(prompt);
       const response = result.response.text();
       
       const steps: ThinkingStep[] = [];
-      const thoughts = response.split('\n\n').filter((t: string) => t.trim());
+      const sections = response.split('##').filter((t: string) => t.trim());
       
-      for (let i = 0; i < thoughts.length; i++) {
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i].trim();
+        const lines = section.split('\n');
+        const title = lines[0].trim();
+        const content = lines.slice(1).join('\n').trim();
+        
         const step: ThinkingStep = {
           id: `thinking_${i}`,
           step: i + 1,
-          thought: thoughts[i].trim(),
-          reasoning: `Analysis step ${i + 1}`,
+          thought: title,
+          reasoning: content || title,
           timestamp: Date.now()
         };
         
@@ -143,30 +209,52 @@ Provide your detailed thinking process.`;
       n.severity === 'critical' || n.severity === 'high'
     );
 
-    const prompt = `Based on this reconnaissance analysis:
+    if (highSeverityNodes.length === 0) {
+      return [];
+    }
 
-Target: ${target}
-High-priority vulnerabilities:
-${highSeverityNodes.map(n => `- ${n.name}: ${n.description}`).join('\n')}
+    const prompt = `You are a security researcher creating proof-of-concept exploits.
 
-Generate practical exploit scripts (Python or Bash) for the top vulnerabilities.
+TARGET: ${target}
+
+CRITICAL/HIGH VULNERABILITIES IDENTIFIED:
+${highSeverityNodes.map(n => `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 ${n.name} [${n.severity.toUpperCase()}]
+📝 ${n.description}
+${n.affectedFiles ? `📁 Files: ${n.affectedFiles.join(', ')}` : ''}
+${n.cve ? `🔖 CVE: ${n.cve}` : ''}
+${n.codeSnippets ? `\n💻 Vulnerable Code:\n${n.codeSnippets.map(cs => `${cs.file}:${cs.lineStart}-${cs.lineEnd}\n${cs.code}\nIssue: ${cs.issue}`).join('\n')}` : ''}
+`).join('\n')}
+
+EXPLOIT GENERATION REQUIREMENTS:
+1. Create WORKING, production-ready exploit scripts
+2. Include error handling and edge cases
+3. Add detailed comments explaining each step
+4. Use modern libraries and best practices
+5. Target the SPECIFIC vulnerabilities found
+6. Make scripts modular and reusable
+
 For each exploit, provide:
-1. Name
-2. Description
-3. Complete working script
-4. Language (python/bash)
-5. Severity
-6. Category
+- Professional naming
+- Clear description of what it does
+- Complete, executable script code
+- Language (python/bash preferred)
+- Severity matching the vulnerability
+- Category (Web/API/Network/Auth/etc)
+- Usage instructions in comments
 
 Output as JSON array:
 [{
-  "name": "Exploit Name",
-  "description": "What it does",
-  "script": "complete script code",
+  "name": "Descriptive Exploit Name",
+  "description": "What this exploit does and why it works",
+  "script": "#!/usr/bin/env python3\\n# Complete working code here...",
   "language": "python",
   "severity": "high",
-  "category": "Web/Network/etc"
-}]`;
+  "category": "Web Security"
+}]
+
+Generate 3-5 HIGH-QUALITY exploits. Quality over quantity!`;
 
     try {
       const result = await this.model.generateContent(prompt);
