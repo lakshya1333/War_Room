@@ -6,12 +6,20 @@ import { AttackTree } from '@/components/AttackTree';
 import { ThinkingDisplay } from '@/components/ThinkingDisplay';
 import { ResultsDashboard } from '@/components/ResultsDashboard';
 import { DownloadReport } from '@/components/DownloadReport';
+import { MatrixRain } from '@/components/MatrixRain';
+import { NetworkTopology3D } from '@/components/NetworkTopology3D';
+import { PulsingAlert } from '@/components/PulsingAlert';
 import { useRecon } from '@/hooks/useRecon';
-import { Shield, Target, Activity, Terminal, Crosshair } from 'lucide-react';
+import { audioManager } from '@/lib/audioManager';
+import { Shield, Target, Activity, Terminal, Crosshair, Volume2, VolumeX, Eye } from 'lucide-react';
 
 export default function Home() {
   const [sessionId, setSessionId] = useState('INITIALIZING');
   const [mounted, setMounted] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [show3D, setShow3D] = useState(false);
+  const [vrMode, setVrMode] = useState(false);
+  const [alerts, setAlerts] = useState<Array<{ id: string; severity: 'low' | 'medium' | 'high' | 'critical'; message: string }>>([]);
   
   const { 
     startRecon, 
@@ -30,11 +38,59 @@ export default function Home() {
   useEffect(() => {
     setSessionId(Date.now().toString(16).toUpperCase());
     setMounted(true);
+    audioManager.initialize();
   }, []);
+
+  // Trigger alerts for critical vulnerabilities
+  useEffect(() => {
+    attackTree.forEach((node) => {
+      if (node.severity === 'critical' || node.severity === 'high') {
+        const alertId = `alert-${node.id}`;
+        if (!alerts.find(a => a.id === alertId)) {
+          setAlerts(prev => [...prev, {
+            id: alertId,
+            severity: node.severity,
+            message: `${node.severity.toUpperCase()}: ${node.name}`
+          }]);
+        }
+      }
+    });
+  }, [attackTree]);
+
+  // Play sounds for status changes
+  useEffect(() => {
+    if (status === 'scanning') {
+      audioManager.play('scan-start');
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (soundEnabled) {
+      audioManager.setMuted(false);
+    } else {
+      audioManager.setMuted(true);
+    }
+  }, [soundEnabled]);
+
+  const toggleSound = () => {
+    setSoundEnabled(!soundEnabled);
+  };
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-red-500/30 selection:text-red-200">
-      {/* Background Grid Animation is handled in globals.css */}
+      {/* Matrix Rain Background */}
+      <MatrixRain />
+      
+      {/* Alerts */}
+      {alerts.map((alert, idx) => (
+        <div key={alert.id} style={{ top: `${20 + idx * 100}px` }}>
+          <PulsingAlert
+            severity={alert.severity}
+            message={alert.message}
+            onDismiss={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
+          />
+        </div>
+      ))}
       
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-black/50 backdrop-blur-md">
@@ -46,15 +102,30 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-white flex items-center gap-2">
-                WAR ROOM <span className="text-[10px] bg-zinc-800 px-1 py-0.5 rounded text-zinc-400">V.3.0</span>
+                WAR ROOM <span className="text-[10px] bg-zinc-800 px-1 py-0.5 rounded text-zinc-400">V.4.0 🚀</span>
               </h1>
               <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-                Automated Offensive Cyber Operations
+                AI-Powered Offensive Cyber Operations • Gemini 2.0 Flash Thinking
               </p>
             </div>
           </div>
           
           <div className="flex items-center gap-6 text-xs font-mono text-zinc-500">
+            <button
+              onClick={toggleSound}
+              className="flex items-center gap-2 hover:text-white transition-colors"
+              title={soundEnabled ? 'Mute sounds' : 'Enable sounds'}
+            >
+              {soundEnabled ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
+            </button>
+            <button
+              onClick={() => setShow3D(!show3D)}
+              className={`flex items-center gap-2 transition-colors ${show3D ? 'text-green-500' : 'hover:text-white'}`}
+              title="Toggle 3D visualization"
+            >
+              <Eye className="h-4 w-4" />
+              <span className="hidden md:inline">3D VIEW</span>
+            </button>
             <div className="flex items-center gap-2">
               <span className="relative flex h-2 w-2">
                 <span className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-75 ${status ? 'bg-green-400' : 'bg-red-400'}`}></span>
@@ -75,6 +146,35 @@ export default function Home() {
       </header>
 
       <main className="container mx-auto p-6 pb-16 space-y-8">
+        {/* 3D Network Topology (Full Width when enabled) */}
+        {show3D && attackTree.length > 0 && (
+          <div className="cyber-border rounded-lg bg-zinc-950/80 backdrop-blur-xl overflow-hidden">
+            <div className="border-b border-zinc-800/50 bg-zinc-900/20 px-4 py-2 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-green-500 animate-pulse" />
+                <span className="text-sm font-bold text-zinc-300 uppercase tracking-wide">3D Network Topology</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setVrMode(!vrMode)}
+                  className={`text-xs px-3 py-1 rounded ${vrMode ? 'bg-green-600 text-white' : 'bg-zinc-800 text-zinc-400 hover:text-white'}`}
+                >
+                  {vrMode ? '🥽 VR MODE' : 'ENABLE VR'}
+                </button>
+                <button
+                  onClick={() => setShow3D(false)}
+                  className="text-zinc-400 hover:text-white"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div className="h-[600px]">
+              <NetworkTopology3D attackTree={attackTree} vrMode={vrMode} />
+            </div>
+          </div>
+        )}
+        
         {/* Top Grid: Input & Thinking */}
         <div className="grid gap-6 lg:grid-cols-12">
           {/* Left Column: Input & Tree (5 cols) */}
@@ -113,10 +213,10 @@ export default function Home() {
       {/* Footer / Status Line */}
       <footer className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-800 bg-black/80 px-4 py-1 backdrop-blur text-[10px] font-mono text-zinc-600 flex justify-between">
         <div>
-          SESSION_ID: {sessionId} // GEMINI_3_PRO_PREVIEW // SECURE_CONNECTION
+          SESSION_ID: {sessionId} // GEMINI_2.0_FLASH_THINKING_EXP // SECURE_CONNECTION // 3D_ENABLED
         </div>
         <div>
-           COPYRIGHT 2026 WAR ROOM OPS
+           COPYRIGHT 2026 WAR ROOM OPS • HACKATHON EDITION
         </div>
       </footer>
     </div>

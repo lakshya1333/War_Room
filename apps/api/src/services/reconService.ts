@@ -78,6 +78,29 @@ export async function startReconnaissance(params: ReconParams) {
 
     io.emit('recon:tree-complete', { sessionId, tree: attackTree });
 
+    // Phase 1.5: Generate Code Fixes (if repo analysis found vulnerabilities)
+    if (repo && attackTree.length > 0) {
+      try {
+        io.emit('recon:status', { 
+          sessionId, 
+          status: 'fixing',
+          message: '🔧 Generating security fixes with Gemini 2.0...'
+        });
+        
+        const codeFixes = await gemini.generateCodeFixes(attackTree, gitInfo);
+        
+        if (codeFixes.length > 0) {
+          io.emit('recon:code-fixes', { 
+            sessionId, 
+            fixes: codeFixes,
+            message: `Generated ${codeFixes.length} security fixes`
+          });
+        }
+      } catch (error: any) {
+        console.error('Code fix generation error:', error);
+      }
+    }
+
     // Phase 2: Thinking Mode Analysis
     io.emit('recon:status', { 
       sessionId, 

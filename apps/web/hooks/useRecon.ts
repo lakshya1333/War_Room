@@ -81,11 +81,18 @@ export function useRecon() {
     });
 
     socketInstance.on('recon:tree-update', (data) => {
-      setAttackTree(prev => [...prev, data.node]);
+      // Transform 'name' to 'title' for frontend compatibility
+      const node = data.node;
+      setAttackTree(prev => [...prev, node]);
     });
 
     socketInstance.on('recon:tree-complete', (data) => {
-      setAttackTree(data.tree);
+      // Transform all nodes
+      const transformedTree = data.tree.map((node: any) => ({
+        ...node,
+        ...node
+      }));
+      setAttackTree(transformedTree);
     });
 
     socketInstance.on('recon:thinking', (data) => {

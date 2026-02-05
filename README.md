@@ -1,16 +1,104 @@
-# War Room - Automated Penetration Testing & Reconnaissance
+# 🚀 War Room V4.0 - Hackathon Edition
 
-A real-time cybersecurity reconnaissance tool built for the Gemini Hackathon. Watch as AI analyzes targets, generates attack trees, and executes exploits in a secure Docker sandbox.
+<div align="center">
 
-## 🎯 Features
+![War Room Banner](https://img.shields.io/badge/WAR_ROOM-V4.0-red?style=for-the-badge&logo=shield&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_2.0-Flash_Thinking-blue?style=for-the-badge&logo=google&logoColor=white)
+![Status](https://img.shields.io/badge/Status-ACTIVE-green?style=for-the-badge&logo=statuspage&logoColor=white)
 
-- **URL/Repo Analysis**: Paste any URL or GitHub repository for instant reconnaissance
-- **Image Upload**: Upload screenshots or hardware photos for enhanced analysis
-- **Live Attack Tree**: Watch the attack tree grow in real-time as vulnerabilities are discovered
-- **Gemini Thinking Mode**: See AI's step-by-step reasoning with Gemini 2.0 Flash Thinking
-- **Exploit Generator**: Automatically generates Python/Bash exploit scripts
-- **Docker Sandbox**: Safely execute exploits in isolated containers
-- **Real-time Dashboard**: Monitor results, outputs, and execution status
+**The Ultimate AI-Powered Offensive Cyber Operations Platform**
+
+*Real-time reconnaissance • 3D visualization • VR support • AI-generated exploits & fixes*
+
+[🎮 Demo](#demo) • [✨ Features](#features) • [🚀 Quick Start](#quick-start) • [🏆 Why This Wins](#why-this-wins)
+
+</div>
+
+---
+
+## 🎯 What Makes This INSANE
+
+War Room V4.0 isn't just a pen-testing tool—it's a **full sensory hacking experience** that pushes the boundaries of what's possible with AI-assisted security research.
+
+### 🔥 Revolutionary Features
+
+#### 1. **Matrix-Style Hacking Atmosphere**
+- 🌧️ **Falling code rain** background (authentic Matrix vibes)
+- ⚡ **Glitch effects** when vulnerabilities are discovered
+- 🔊 **Dynamic sound effects** (scanning beeps, alert sounds, typing clicks)
+- 💥 **Pulsing alerts** for critical findings with audio warnings
+
+#### 2. **3D Network Topology Visualization**
+- 🌐 **Interactive 3D graph** of attack vectors using Three.js
+- 🎮 **VR mode support** for immersive pen-testing
+- ✨ **Particle effects** showing data flows between nodes
+- 🎯 **Click nodes** to see detailed vulnerability info
+
+#### 3. **Latest Gemini 2.0 Flash Thinking Experimental**
+- 🧠 **Advanced reasoning** with step-by-step thinking display
+- 🔮 **65,536 token context** for deep code analysis
+- 🎯 **OWASP Top 10** automated scanning
+- 📊 **Risk scoring** and prioritization
+
+#### 4. **AI-Powered Code Fixes** ⭐ NEW
+- 🔧 **Automatic vulnerability remediation** for repositories
+- 📝 **Side-by-side diff view** (vulnerable vs. secure)
+- 📦 **Generate patch files** for immediate deployment
+- ✅ **Production-ready code** with security best practices
+
+#### 5. **Real-Time Attack Tree**
+- 🌳 **Live streaming** vulnerability discovery
+- 📊 **Color-coded severity** (critical/high/medium/low)
+- 📁 **File paths & line numbers** for code vulnerabilities
+- 🔗 **CVE integration** with affected files
+
+#### 6. **Docker Sandbox Execution**
+- 🐳 **Isolated containers** for safe exploit testing
+- ⚡ **Real-time output streaming**
+- 🛡️ **Resource limits** (512MB RAM, 50% CPU, 30s timeout)
+- 🧹 **Auto-cleanup** after execution
+
+---
+
+## 🎬 Demo
+
+```
+┌─────────────────────────────────────────────────────┐
+│  🛡️  WAR ROOM V4.0 🚀                               │
+│  AI-Powered Offensive Cyber Operations              │
+│  Gemini 2.0 Flash Thinking • 3D • VR • Sound       │
+└─────────────────────────────────────────────────────┘
+
+🎯 Target: https://example-vulnerable-app.com
+
+⚡ SCANNING... [████████████████████] 100%
+
+🌳 Attack Tree:
+  ├─ 🔴 CRITICAL: SQL Injection in /api/users
+  ├─ 🟠 HIGH: XSS in search parameter
+  ├─ 🟡 MEDIUM: CORS misconfiguration
+  └─ 🔵 LOW: Information disclosure
+
+🧠 Gemini Thinking:
+  → Analyzing authentication flow...
+  → Identifying injection points...
+  → Mapping attack surface...
+  ✓ Analysis complete!
+
+🔧 Code Fixes Generated:
+  ✓ users.js: Added parameterized queries
+  ✓ search.jsx: Implemented input sanitization
+  ✓ cors.js: Restricted origins
+
+🐳 Exploits Executed:
+  ✅ SQL Injection PoC: SUCCESS
+  ✅ XSS Payload: SUCCESS
+  ⏱️  Time: 2.3s
+
+📊 Security Score: 42/100 (HIGH RISK)
+```
+
+---
 
 ## 🚀 Quick Start
 
@@ -19,111 +107,38 @@ A real-time cybersecurity reconnaissance tool built for the Gemini Hackathon. Wa
 - Node.js 18+
 - pnpm (`npm install -g pnpm`)
 - Docker Desktop (running)
-- Gemini API Key ([Get one here](https://ai.google.dev/))
+- Gemini API Key ([Get free key](https://ai.google.dev/))
 
-### Easy Setup
+### 🎯 One-Command Setup
 
-**Option 1: Automated Setup (Recommended)**
-
-Windows:
+**Windows:**
 ```bash
 .\setup.bat
 ```
 
-macOS/Linux:
+**macOS/Linux:**
 ```bash
-chmod +x setup.sh
-./setup.sh
+chmod +x setup.sh && ./setup.sh
 ```
 
-**Option 2: Manual Setup**
+### 🎮 Launch
 
-1. Install dependencies:
-   ```bash
-   pnpm install
-   ```
-
-2. Set up API environment:
-   ```bash
-   cd apps/api
-   cp .env.example .env
-   ```
-   
-   Edit `.env` and add your Gemini API key:
-   ```env
-   GEMINI_API_KEY=your_key_here
-   ```
-
-3. Start Docker Desktop
-
-4. Run the project:
-   ```bash
-   pnpm dev
-   ```
-
-### Access the App
-
-- **Web Interface**: http://localhost:3000
-- **API Server**: http://localhost:3001
-
-## 📖 Usage
-
-1. Open http://localhost:3000
-2. Enter a target URL or GitHub repo
-3. (Optional) Upload a screenshot or hardware photo
-4. Click **"Launch Recon"**
-5. Watch the magic happen:
-   - ✅ Attack tree builds in real-time
-   - ✅ AI thinking steps stream live
-   - ✅ Exploits generate automatically
-   - ✅ Scripts execute in Docker sandbox
-   - ✅ Results appear on dashboard
-
-## 🏗️ Architecture
-
-```
-War_Room/
-├── apps/
-│   ├── api/              # Express + Socket.IO backend
-│   │   ├── src/
-│   │   │   ├── services/
-│   │   │   │   ├── geminiService.ts    # Gemini AI integration
-│   │   │   │   ├── dockerService.ts    # Docker execution
-│   │   │   │   └── reconService.ts     # Main recon logic
-│   │   │   ├── routes/
-│   │   │   │   └── recon.ts            # API endpoints
-│   │   │   └── index.ts                # Server setup
-│   │   └── package.json
-│   │
-│   └── web/              # Next.js frontend
-│       ├── app/
-│       │   ├── page.tsx                 # Main page
-│       │   └── layout.tsx               # Root layout
-│       ├── components/
-│       │   ├── ReconInput.tsx          # Input form
-│       │   ├── AttackTree.tsx          # Tree visualization
-│       │   ├── ThinkingDisplay.tsx     # AI thinking
-│       │   └── ResultsDashboard.tsx    # Results view
-│       ├── hooks/
-│       │   └── useRecon.ts             # Recon logic
-│       └── package.json
-│
-└── packages/             # Shared packages
+```bash
+pnpm start
 ```
 
-## 🔧 Tech Stack
+Then open: http://localhost:3000
 
-**Backend:**
-- Express.js - Web framework
-- Socket.IO - Real-time communication
-- Google Generative AI - Gemini 2.0 integration
-- Dockerode - Docker API client
-- TypeScript - Type safety
+**That's it!** 🎉
 
-**Frontend:**
-- Next.js 16 - React framework
-- React 19 - UI library
-- TailwindCSS - Styling
+Alternatively, for development:
+```bash
+pnpm dev  # Runs both API and web in dev mode
+```
+
+---
+
+## 🏆 Why This Wins the Hackathon
 - Socket.IO Client - Real-time updates
 - Lucide Icons - Icon library
 

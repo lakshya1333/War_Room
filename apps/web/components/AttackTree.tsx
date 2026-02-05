@@ -2,8 +2,11 @@
 
 import { AlertTriangle, Shield, AlertCircle, Info, ChevronRight, FileCode, FolderOpen, Copy, Check, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { GlitchText } from './GlitchText';
+import { TypewriterText } from './TypewriterText';
+import { audioManager } from '@/lib/audioManager';
 
 interface CodeSnippet {
   file: string;
@@ -15,7 +18,8 @@ interface CodeSnippet {
 
 interface AttackTreeNode {
   id: string;
-  name: string;
+  title?: string;
+  name?: string;
   description: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
   children?: AttackTreeNode[];
@@ -92,6 +96,16 @@ function CodeSnippetDisplay({ snippet }: { snippet: CodeSnippet }) {
 
 function TreeNode({ node, depth = 0 }: { node: AttackTreeNode; depth?: number }) {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isNew, setIsNew] = useState(true);
+  
+  useEffect(() => {
+    // Play sound when new node appears
+    if (isNew) {
+      audioManager.play('vulnerability-found');
+      const timer = setTimeout(() => setIsNew(false), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
   
   const normalizedSeverity = (node.severity || 'low').toLowerCase() as keyof typeof severityConfig;
   const Icon = severityIcons[normalizedSeverity] || Info;
@@ -126,7 +140,11 @@ function TreeNode({ node, depth = 0 }: { node: AttackTreeNode; depth?: number })
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <h3 className="font-mono text-sm font-bold text-zinc-100 group-hover:text-white">
-                  {node.name}
+                  {isNew ? (
+                    <GlitchText text={node.name || 'Unknown'} severity={normalizedSeverity} glitchOnMount />
+                  ) : (
+                    node.name || 'Unknown'
+                  )}
                 </h3>
                 <div className="flex items-center gap-2">
                   {node.cve && (

@@ -18,6 +18,14 @@ export class GitService {
       const repoName = repoUrl.split('/').pop()?.replace('.git', '') || 'repo';
       const repoPath = path.join(this.tempDir, repoName);
 
+      // Clean up existing directory if it exists
+      try {
+        await fs.rm(repoPath, { recursive: true, force: true });
+        console.log(`🧹 Cleaned up existing directory: ${repoPath}`);
+      } catch (cleanupError) {
+        // Directory doesn't exist, that's fine
+      }
+
       // Clone repository (shallow clone for speed)
       console.log(`Cloning repository: ${repoUrl}`);
       await execAsync(`git clone --depth 1 ${repoUrl} "${repoPath}"`);
