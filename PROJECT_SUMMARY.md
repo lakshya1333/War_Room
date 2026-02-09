@@ -1,7 +1,7 @@
 # 🎯 Project Summary: War Room
 
 ## Overview
-**War Room** is a real-time automated penetration testing and reconnaissance tool built for the Gemini Hackathon. It demonstrates the power of Gemini 2.0's thinking capabilities applied to cybersecurity.
+**War Room** is a real-time automated penetration testing and reconnaissance tool built for the Gemini Hackathon. It demonstrates the power of **Gemini 3 Pro Preview** with intelligent fallback applied to cybersecurity.
 
 ---
 
@@ -19,10 +19,12 @@
    - Color-coded severity (critical/high/medium/low)
    - Hierarchical attack vector display
 
-3. **✅ Gemini Thinking Mode Integration**
-   - Gemini 2.0 Flash Thinking Exp
+3. **✅ Gemini 3 Thinking Mode Integration** ⭐ NEW
+   - Gemini 3 Pro Preview (Primary)
+   - Auto-fallback to Gemini 3 Flash, 2.5 Flash, 2.0 Flash
    - Step-by-step reasoning display
    - Real-time thinking stream
+   - Zero-downtime on high demand
 
 4. **✅ Exploit Script Generator**
    - Automatic Python/Bash script generation
@@ -94,7 +96,7 @@ War_Room/
 ### Backend
 - ✅ **Express.js** - Web framework
 - ✅ **Socket.IO** - Real-time WebSocket communication
-- ✅ **@google/generative-ai** - Gemini 2.0 integration
+- ✅ **@google/generative-ai** - Gemini 3 integration with fallback
 - ✅ **Dockerode** - Docker API client
 - ✅ **Multer** - File upload handling
 - ✅ **TypeScript** - Type safety
@@ -179,17 +181,20 @@ Gemini 2.0 Flash Thinking Exp
 
 ## 🎓 Gemini Features Demonstrated
 
-### Gemini 2.0 Flash Exp
-1. **Fast inference** for attack tree generation
-2. **Multimodal capabilities** (text + images)
-3. **Structured output** (JSON attack trees)
-4. **Code generation** (Python/Bash exploits)
+### Gemini 3 Pro Preview (Primary) ⭐
+1. **Latest Gemini 3** model capabilities
+2. **Fast inference** for attack tree generation
+3. **Multimodal capabilities** (text + images)
+4. **Structured output** (JSON attack trees)
+5. **Code generation** (Python/Bash exploits)
+6. **Advanced reasoning** with transparent thinking
 
-### Gemini 2.0 Flash Thinking Exp
-1. **Transparent reasoning** process
-2. **Deep analysis** of vulnerabilities
-3. **Strategic planning** for exploitation
-4. **Educational output** for learning
+### Intelligent Fallback System ⚡
+1. **Auto-retry** on 503/429 errors
+2. **4-tier cascade**: Gemini 3 Pro → 3 Flash → 2.5 Flash → 2.0 Flash
+3. **Zero downtime** during high demand
+4. **Seamless switching** with logging
+5. **Production-ready** reliability
 
 ---
 

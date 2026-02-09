@@ -61,13 +61,13 @@
            │                            │
            │ API Calls                  │ Container Execution
 ┌──────────▼────────┐         ┌─────────▼──────────┐
-│  Gemini 2.0       │         │   Docker Engine     │
-│  Flash Thinking   │         │                     │
-│  Experimental     │         │  ┌──────────────┐  │
+│  Gemini 3         │         │   Docker Engine     │
+│  Pro Preview      │         │                     │
+│  + Fallback       │         │  ┌──────────────┐  │
 │  ⭐ LATEST        │         │  │   Python     │  │
 ├───────────────────┤         │  │  Container   │  │
-│ • 65K tokens      │         │  └──────────────┘  │
-│ • Temperature 1.0 │         │  ┌──────────────┐  │
+│ • Extended ctx    │         │  └──────────────┘  │
+│ • Auto fallback   │         │  ┌──────────────┐  │
 │ • Streaming       │         │  │    Bash      │  │
 │ • Multimodal      │         │  │  Container   │  │
 └───────────────────┘         │  └──────────────┘  │
@@ -143,10 +143,12 @@
 │     • Path following                                                        │
 │     • Glow effects                                                          │
 │                                                                              │
-│  ⭐ 8. Gemini 2.0 Flash Thinking Exp                                        │
-│     • Latest experimental model                                             │
-│     • 65,536 token context                                                  │
-│     • Enhanced reasoning                                                    │
+│  ⭐ 8. Gemini 3 Pro Preview + Auto-Fallback ⭐ NEW                       │
+│     • Latest Gemini 3 model                                             │
+│     • Extended context window                                           │
+│     • Enhanced reasoning                                                 │
+│     • 4-tier fallback: 3 Pro → 3 Flash → 2.5 Flash → 2.0 Flash        │
+│     • Zero-downtime on high demand                                       │
 │                                                                              │
 │  ⭐ 9. AI Code Fixes (generateCodeFixes())                                  │
 │     • Vulnerability remediation                                             │
@@ -174,10 +176,10 @@
 │  • Three.js ⭐                           • Dockerode                        │
 │  • React Three Fiber ⭐                  • Simple Git                       │
 │  • React Three XR ⭐                                                        │
-│  • Framer Motion                         AI & Cloud:                        │
+│  AI & Cloud:                                                                │
 │  • Lucide Icons                          • Google Generative AI             │
-│                                          • Gemini 2.0 Flash Thinking ⭐      │
-│  DevOps:                                 • 65K token context ⭐             │
+│                                          • Gemini 3 Pro Preview ⭐          │
+│  DevOps:                                 • Auto-fallback system ⭐          │
 │  • pnpm (package manager)                                                   │
 │  • Turbo (monorepo)                      Security:                          │
 │  • Docker                                • Docker sandboxing                │

@@ -3,7 +3,7 @@
 <div align="center">
 
 ![War Room Banner](https://img.shields.io/badge/WAR_ROOM-V4.0-red?style=for-the-badge&logo=shield&logoColor=white)
-![Gemini](https://img.shields.io/badge/Gemini_2.0-Flash_Thinking-blue?style=for-the-badge&logo=google&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_3-Pro_Preview-blue?style=for-the-badge&logo=google&logoColor=white)
 ![Status](https://img.shields.io/badge/Status-ACTIVE-green?style=for-the-badge&logo=statuspage&logoColor=white)
 
 **The Ultimate AI-Powered Offensive Cyber Operations Platform**
@@ -34,11 +34,13 @@ War Room V4.0 isn't just a pen-testing tool—it's a **full sensory hacking expe
 - ✨ **Particle effects** showing data flows between nodes
 - 🎯 **Click nodes** to see detailed vulnerability info
 
-#### 3. **Latest Gemini 2.0 Flash Thinking Experimental**
+#### 3. **Gemini 3 Pro Preview with Auto-Fallback** ⭐ NEW
 - 🧠 **Advanced reasoning** with step-by-step thinking display
-- 🔮 **65,536 token context** for deep code analysis
+- 🔄 **Automatic model fallback** on high demand (503 errors)
+- 🔮 **Extended context** for deep code analysis
 - 🎯 **OWASP Top 10** automated scanning
 - 📊 **Risk scoring** and prioritization
+- 🚀 **4-tier fallback**: Gemini 3 Pro → 3 Flash → 2.5 Flash → 2.0 Flash
 
 #### 4. **AI-Powered Code Fixes** ⭐ NEW
 - 🔧 **Automatic vulnerability remediation** for repositories
@@ -66,7 +68,7 @@ War Room V4.0 isn't just a pen-testing tool—it's a **full sensory hacking expe
 ┌─────────────────────────────────────────────────────┐
 │  🛡️  WAR ROOM V4.0 🚀                               │
 │  AI-Powered Offensive Cyber Operations              │
-│  Gemini 2.0 Flash Thinking • 3D • VR • Sound       │
+│  Gemini 3 Pro Preview • 3D • VR • Sound            │
 └─────────────────────────────────────────────────────┘
 
 🎯 Target: https://example-vulnerable-app.com
@@ -157,16 +159,25 @@ pnpm dev  # Runs both API and web in dev mode
 
 ## 🎓 Gemini Features Used
 
-### Gemini 2.0 Flash Exp
+### Gemini 3 Pro Preview (Primary)
+- 🏆 **Latest Gemini 3** model for superior analysis
 - Ultra-fast attack tree generation
-- Exploit script creation
+- Advanced exploit script creation
 - Multimodal analysis (text + images)
-
-### Gemini 2.0 Flash Thinking Exp
 - Deep vulnerability analysis
-- Step-by-step reasoning
+- Step-by-step reasoning display
 - Exploitation strategy planning
-- Transparent AI decision-making
+- AI-powered code fix generation
+
+### Intelligent Fallback System ⚡
+- **Auto-retry logic** on 503/429 errors
+- **4-tier model cascade**:
+  1. `gemini-3-pro-preview` (Primary)
+  2. `gemini-3-flash-preview` (Speed)
+  3. `gemini-2.5-flash` (Stable)
+  4. `gemini-2.0-flash-001` (Backup)
+- **Zero downtime** during high demand
+- **Transparent model switching** in logs
 
 ## 📝 Environment Variables
 

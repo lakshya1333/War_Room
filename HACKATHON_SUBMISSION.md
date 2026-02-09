@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-**War Room V4.0** is a revolutionary AI-powered cybersecurity platform that transforms offensive security operations into an immersive, multi-sensory experience. Built specifically for the Gemini Hackathon, it showcases the cutting-edge capabilities of Gemini 2.0 Flash Thinking Experimental in the most demanding real-world application: penetration testing.
+**War Room V4.0** is a revolutionary AI-powered cybersecurity platform that transforms offensive security operations into an immersive, multi-sensory experience. Built specifically for the Gemini Hackathon, it showcases the cutting-edge capabilities of **Gemini 3 Pro Preview** with intelligent fallback in the most demanding real-world application: penetration testing.
 
 ## 🎯 What Makes This Special
 
@@ -14,11 +14,17 @@ Most security scanners are boring command-line tools. War Room is a **cinematic 
 - 3D network topology visualization
 - VR mode for immersive analysis
 
-### 2. **Latest Gemini 2.0 Flash Thinking Experimental**
-We're using the newest experimental model with:
-- **65,536 token context** - Analyzes entire codebases
+### 2. **Gemini 3 Pro Preview with Intelligent Fallback** ⭐ NEW
+We're using the latest Gemini 3 model with production-ready reliability:
+- **Gemini 3 Pro Preview** - Primary model for superior analysis
+- **Extended context** - Analyzes entire codebases
 - **Transparent thinking** - Shows reasoning step-by-step
-- **Creative temperature (1.0)** - Generates novel exploits
+- **Auto-retry with fallback** - 4-tier cascade on high demand:
+  - `gemini-3-pro-preview` (Primary)
+  - `gemini-3-flash-preview` (Fast fallback)
+  - `gemini-2.5-flash` (Stable)
+  - `gemini-2.0-flash-001` (Backup)
+- **Zero downtime** - Seamlessly handles 503/429 errors
 - **Streaming support** - Real-time updates
 
 ### 3. **AI-Powered Code Fixes** ⭐ UNIQUE FEATURE
@@ -212,12 +218,14 @@ War Room teaches security through:
 
 ## 🎯 Gemini Integration Excellence
 
-### Why Gemini 2.0 Flash Thinking?
-1. **Reasoning transparency** - Users see AI's thought process
-2. **Large context** - Analyze entire codebases
-3. **Creative output** - Novel exploits and fixes
-4. **Fast inference** - Real-time streaming
-5. **Multimodal** - Handles code + images
+### Why Gemini 3 Pro Preview?
+1. **Latest model** - Gemini 3 Pro for cutting-edge capabilities
+2. **Reasoning transparency** - Users see AI's thought process
+3. **Extended context** - Analyze entire codebases
+4. **Creative output** - Novel exploits and fixes
+5. **Fast inference** - Real-time streaming
+6. **Multimodal** - Handles code + images
+7. **Production-ready** - Smart fallback prevents downtime
 
 ### Advanced Prompting
 ```typescript
@@ -324,7 +332,7 @@ for await (const chunk of result.stream) {
 
 ## 🎬 Closing Statement
 
-**War Room V4.0** represents the future of offensive security operations. By combining the power of Gemini 2.0 Flash Thinking with immersive 3D/VR visualization and multi-sensory feedback, we've created not just a tool, but an **experience** that makes cybersecurity accessible, engaging, and effective.
+**War Room V4.0** represents the future of offensive security operations. By combining the power of **Gemini 3 Pro Preview** with intelligent fallback, immersive 3D/VR visualization and multi-sensory feedback, we've created not just a tool, but an **experience** that makes cybersecurity accessible, engaging, and effective.
 
 This project demonstrates:
 - ✅ **Technical mastery** of latest AI models
