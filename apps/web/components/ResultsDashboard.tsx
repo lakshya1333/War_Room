@@ -41,27 +41,50 @@ export function ResultsDashboard({ exploits, results }: ResultsDashboardProps) {
 
   return (
     <div className="space-y-6">
-      {/* Stats Header */}
+      {/* Enhanced Stats Grid */}
       <div className="grid gap-4 md:grid-cols-4">
-        <div className="cyber-border rounded-lg bg-zinc-900/50 p-4">
-          <p className="text-xs font-semibold text-zinc-500 uppercase">Total Exploits</p>
-          <p className="mt-1 text-2xl font-mono font-bold text-white">{exploits.length}</p>
-        </div>
-        <div className="cyber-border rounded-lg bg-zinc-900/50 p-4">
-          <p className="text-xs font-semibold text-zinc-500 uppercase">Executed</p>
-          <p className="mt-1 text-2xl font-mono font-bold text-blue-400">{executedCount}</p>
-        </div>
-        <div className="cyber-border rounded-lg bg-zinc-900/50 p-4">
-          <p className="text-xs font-semibold text-zinc-500 uppercase">Successful</p>
-          <p className="mt-1 text-2xl font-mono font-bold text-green-400">{successCount}</p>
-        </div>
-        <div className="cyber-border rounded-lg bg-zinc-900/50 p-4">
-          <p className="text-xs font-semibold text-zinc-500 uppercase">Failed</p>
-          <p className="mt-1 text-2xl font-mono font-bold text-red-400">{failureCount}</p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          className="glass-panel rounded-xl p-5 border-l-2 border-[var(--accent-cyan)]"
+        >
+          <p className="metadata-label mb-2">Total Exploits</p>
+          <p className="text-3xl font-mono font-bold text-white">{exploits.length}</p>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.15 }}
+          className="glass-panel rounded-xl p-5 border-l-2 border-[var(--accent-blue)]"
+        >
+          <p className="metadata-label mb-2">Executed</p>
+          <p className="text-3xl font-mono font-bold text-[var(--accent-blue)]">{executedCount}</p>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="glass-panel rounded-xl p-5 border-l-2 border-[var(--status-success)]"
+        >
+          <p className="metadata-label mb-2">Successful</p>
+          <p className="text-3xl font-mono font-bold text-[var(--status-success)]">{successCount}</p>
+        </motion.div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.25 }}
+          className="glass-panel rounded-xl p-5 border-l-2 border-[var(--status-critical)]"
+        >
+          <p className="metadata-label mb-2">Failed</p>
+          <p className="text-3xl font-mono font-bold text-[var(--status-critical)]">{failureCount}</p>
+        </motion.div>
       </div>
 
-      {/* Exploits Grid */}
+      {/* Enhanced Exploits Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {exploits.map((exploit, index) => {
           const result = getResult(exploit.id);
@@ -71,40 +94,56 @@ export function ResultsDashboard({ exploits, results }: ResultsDashboardProps) {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ 
+                delay: index * 0.08,
+                type: "spring",
+                stiffness: 100,
+                damping: 20
+              }}
               key={exploit.id}
               onClick={() => setSelectedExploit(exploit.id)}
               className={cn(
-                "cursor-pointer rounded-lg border bg-zinc-900/50 p-4 transition-all hover:bg-zinc-900",
-                isSelected ? "border-red-500 ring-1 ring-red-500" : "border-zinc-800 hover:border-red-500/50"
+                "group cursor-pointer rounded-xl glass-panel p-5 transition-all duration-300 hover:scale-[1.02]",
+                isSelected 
+                  ? "border-[var(--accent-cyan)] ring-2 ring-[var(--accent-cyan)]/30 shadow-[var(--shadow-glow-cyan)]" 
+                  : "hover:border-[var(--accent-cyan)]/50"
               )}
             >
-              <div className="mb-3 flex items-start justify-between">
-                <div className="rounded-lg bg-zinc-800 p-2">
-                  <Code className="h-5 w-5 text-zinc-400" />
+              {/* Icon and Status */}
+              <div className="mb-4 flex items-start justify-between">
+                <div className="rounded-xl bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-blue)]/10 border border-[var(--accent-cyan)]/30 p-3 group-hover:scale-110 transition-transform duration-300">
+                  <Code className="h-5 w-5 text-[var(--accent-cyan)]" />
                 </div>
                 {result && (
                   result.success ? (
-                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    <CheckCircle className="h-6 w-6 text-[var(--status-success)] drop-shadow-[0_0_8px_var(--status-success)]" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-red-500" />
+                    <XCircle className="h-6 w-6 text-[var(--status-critical)] drop-shadow-[0_0_8px_var(--status-critical)]" />
                   )
                 )}
-                {!result && <div className="h-2 w-2 animate-pulse rounded-full bg-yellow-500" />}
+                {!result && (
+                  <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--status-medium)]" 
+                    style={{ boxShadow: '0 0 8px var(--status-medium)' }} 
+                  />
+                )}
               </div>
               
-              <h3 className="font-semibold text-white line-clamp-1">{exploit.name}</h3>
-              <p className="mt-1 text-xs text-zinc-400">{exploit.category}</p>
+              {/* Title and Category */}
+              <h3 className="font-bold text-white line-clamp-1 mb-1 group-hover:text-[var(--accent-cyan)] transition-colors">
+                {exploit.name}
+              </h3>
+              <p className="metadata-label mb-4">{exploit.category}</p>
               
-              <div className="mt-4 flex items-center justify-between">
-                <span className="font-mono text-xs text-zinc-500">
+              {/* Footer: Language and Severity */}
+              <div className="flex items-center justify-between pt-3 border-t border-[var(--border-primary)]">
+                <span className="font-mono text-xs text-[var(--foreground-tertiary)] px-2 py-1 glass-panel rounded">
                   {exploit.language}
                 </span>
                 <span className={cn(
-                  "rounded px-2 py-0.5 text-[10px] font-bold uppercase",
-                  exploit.severity === 'critical' ? 'bg-red-500/20 text-red-400' :
-                  exploit.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                  'bg-yellow-500/20 text-yellow-400'
+                  "status-badge",
+                  exploit.severity === 'critical' ? 'status-critical' :
+                  exploit.severity === 'high' ? 'status-high' :
+                  'status-medium'
                 )}>
                   {exploit.severity}
                 </span>

@@ -37,38 +37,43 @@ export function ReconInput({ onLaunch, isLoading }: ReconInputProps) {
   };
 
   return (
-    <div className="cyber-border relative overflow-hidden rounded-lg bg-zinc-950/80 p-1 backdrop-blur-xl z-10">
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+    <div className="glass-panel-elevated relative overflow-hidden rounded-xl">
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--accent-cyan)] to-transparent opacity-60" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-cyan)]/5 to-transparent pointer-events-none" />
       
       <div className="p-6 relative z-10">
         <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-red-500/10 text-red-500">
-              <Command className="h-6 w-6" />
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-blue)]/10 border border-[var(--accent-cyan)]/30 shimmer-effect">
+              <Command className="h-5 w-5 text-[var(--accent-cyan)]" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Target Acquisition</h2>
-              <p className="text-xs text-zinc-500">Select reconnaissance vector</p>
+              <h2 className="text-lg font-bold text-white tracking-tight">Target Acquisition</h2>
+              <p className="metadata-label mt-0.5">Select reconnaissance vector</p>
             </div>
           </div>
-          <div className="flex rounded-lg bg-zinc-900/50 p-1">
+          
+          {/* Enhanced Tab Switcher */}
+          <div className="glass-panel rounded-lg p-1 flex gap-1">
             {(['url', 'repo', 'image'] as InputMode[]).map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
                 className={cn(
-                  "relative flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors",
-                  mode === m ? "text-white" : "text-zinc-500 hover:text-zinc-300"
+                  "relative flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold transition-all duration-300",
+                  mode === m 
+                    ? "text-white" 
+                    : "text-[var(--foreground-tertiary)] hover:text-[var(--foreground-secondary)]"
                 )}
               >
                 {mode === m && (
                   <motion.div
                     layoutId="activeTab"
-                    className="absolute inset-0 rounded-md bg-zinc-800"
+                    className="absolute inset-0 rounded-md bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-blue)]/10 border border-[var(--accent-cyan)]/30"
                     transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                   />
                 )}
-                <span className="relative z-10 flex items-center gap-2 capitalize">
+                <span className="relative z-10 flex items-center gap-2 uppercase tracking-wide metadata-label">
                   {m === 'url' && <Globe className="h-4 w-4" />}
                   {m === 'repo' && <Github className="h-4 w-4" />}
                   {m === 'image' && <Upload className="h-4 w-4" />}
@@ -79,64 +84,66 @@ export function ReconInput({ onLaunch, isLoading }: ReconInputProps) {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <AnimatePresence mode="wait">
             <motion.div
               key={mode}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
             >
               {mode === 'url' && (
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Target URL</label>
-                  <div className="relative">
-                    <Globe className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
+                  <label className="metadata-label">Target URL</label>
+                  <div className="relative group">
+                    <Globe className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--foreground-tertiary)] group-focus-within:text-[var(--accent-cyan)] transition-colors" />
                     <input
                       type="url"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       placeholder="https://target.com"
-                      className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 py-3 pl-10 pr-4 text-white placeholder:text-zinc-600 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-all shadow-[0_0_20px_rgba(0,0,0,0.3)]"
+                      className="w-full rounded-lg border border-[var(--border-primary)] bg-[var(--surface-glass)] py-3.5 pl-12 pr-4 text-white placeholder:text-[var(--foreground-tertiary)] focus:border-[var(--accent-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-cyan)]/20 transition-all backdrop-blur-sm"
                       autoFocus
                     />
+                    <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-[var(--accent-cyan)]/0 to-[var(--accent-blue)]/0 group-focus-within:from-[var(--accent-cyan)]/5 group-focus-within:to-[var(--accent-blue)]/5 pointer-events-none transition-all duration-300" />
                   </div>
                 </div>
               )}
 
               {mode === 'repo' && (
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">GitHub Repository</label>
-                  <div className="relative">
-                    <Github className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-500" />
+                  <label className="metadata-label">GitHub Repository</label>
+                  <div className="relative group">
+                    <Github className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--foreground-tertiary)] group-focus-within:text-[var(--accent-cyan)] transition-colors" />
                     <input
                       type="text"
                       value={repo}
                       onChange={(e) => setRepo(e.target.value)}
                       placeholder="owner/repo"
-                      className="w-full rounded-lg border border-zinc-800 bg-zinc-900/50 py-3 pl-10 pr-4 text-white placeholder:text-zinc-600 focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500 transition-all"
+                      className="w-full rounded-lg border border-[var(--border-primary)] bg-[var(--surface-glass)] py-3.5 pl-12 pr-4 text-white placeholder:text-[var(--foreground-tertiary)] focus:border-[var(--accent-cyan)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-cyan)]/20 transition-all backdrop-blur-sm"
                       autoFocus
                     />
+                    <div className="absolute inset-0 rounded-lg bg-gradient-to-r from-[var(--accent-cyan)]/0 to-[var(--accent-blue)]/0 group-focus-within:from-[var(--accent-cyan)]/5 group-focus-within:to-[var(--accent-blue)]/5 pointer-events-none transition-all duration-300" />
                   </div>
                 </div>
               )}
 
               {mode === 'image' && (
                 <div className="space-y-2">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-zinc-500">Upload Intelligence</label>
+                  <label className="metadata-label">Upload Intelligence</label>
                   <div
                     onClick={() => fileInputRef.current?.click()}
-                    className="group relative flex cursor-pointer flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed border-zinc-800 bg-zinc-900/30 py-8 transition-all hover:border-red-500/50 hover:bg-zinc-900/50"
+                    className="group relative flex cursor-pointer flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-[var(--border-primary)] bg-[var(--surface-glass)] py-10 transition-all hover:border-[var(--accent-cyan)]/50 hover:bg-[var(--surface-elevated)] backdrop-blur-sm"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800 group-hover:bg-zinc-800/80 group-hover:scale-110 transition-all duration-300">
-                      <Upload className="h-6 w-6 text-zinc-400 group-hover:text-red-500" />
+                    <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-blue)]/10 border border-[var(--accent-cyan)]/30 group-hover:scale-110 group-hover:shadow-[var(--shadow-glow-cyan)] transition-all duration-300">
+                      <Upload className="h-7 w-7 text-[var(--accent-cyan)]" />
                     </div>
                     <div className="text-center">
-                      <p className="text-sm font-medium text-zinc-300">
+                      <p className="text-sm font-medium text-white">
                         {image ? image.name : 'Drop screenshot or click to upload'}
                       </p>
-                      <p className="mt-1 text-xs text-zinc-500">
+                      <p className="mt-1.5 metadata-label">
                         Supports PNG, JPG, GIF up to 10MB
                       </p>
                     </div>
@@ -153,26 +160,29 @@ export function ReconInput({ onLaunch, isLoading }: ReconInputProps) {
             </motion.div>
           </AnimatePresence>
 
+          {/* Enhanced Launch Button */}
           <button
             type="submit"
             disabled={isLoading || (!url && !repo && !image)}
-            className="group relative w-full overflow-hidden rounded-lg bg-red-600 px-4 py-3 font-semibold text-white shadow-lg transition-all hover:bg-red-500 hover:shadow-red-500/25 disabled:cursor-not-allowed disabled:opacity-50"
+            className="group relative w-full overflow-hidden rounded-xl bg-gradient-to-r from-[var(--accent-cyan)] to-[var(--accent-blue)] px-6 py-4 font-bold text-white shadow-lg hover:shadow-[var(--shadow-glow-cyan)] transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:grayscale"
           >
             <div className="absolute inset-0 bg-noise opacity-10" />
-            <div className="relative flex items-center justify-center gap-2">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+            
+            <div className="relative flex items-center justify-center gap-3">
               {isLoading ? (
                 <>
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                  <span>INITIALIZING SCAN...</span>
+                  <div className="h-5 w-5 animate-spin rounded-full border-3 border-white border-t-transparent" />
+                  <span className="text-sm uppercase tracking-wider">INITIALIZING SCAN...</span>
                 </>
               ) : (
                 <>
-                  <Zap className="h-5 w-5 transition-transform group-hover:scale-110" />
-                  <span>LAUNCH RECONNAISSANCE</span>
+                  <Zap className="h-5 w-5 transition-transform group-hover:scale-125 group-hover:rotate-12" />
+                  <span className="text-sm uppercase tracking-wider">LAUNCH RECONNAISSANCE</span>
+                  <Zap className="h-5 w-5 transition-transform group-hover:scale-125 group-hover:-rotate-12" />
                 </>
               )}
             </div>
-            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform group-hover:animate-[shimmer_1.5s_infinite]" />
           </button>
         </form>
       </div>

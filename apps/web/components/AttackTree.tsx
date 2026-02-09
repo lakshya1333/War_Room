@@ -116,58 +116,73 @@ function TreeNode({ node, depth = 0 }: { node: AttackTreeNode; depth?: number })
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
+        transition={{ type: "spring", stiffness: 100, damping: 20 }}
         className="relative z-10"
       >
         <div 
           onClick={() => setIsExpanded(!isExpanded)}
           className={cn(
-            "group relative flex cursor-pointer flex-col overflow-hidden rounded-lg border bg-zinc-900/80 p-4 transition-all hover:bg-zinc-800",
-            config.border,
-            config.glow
+            "group relative flex cursor-pointer flex-col overflow-hidden rounded-xl border glass-panel p-5 transition-all duration-300 hover:border-[var(--accent-cyan)]/50",
+            config.border
           )}
         >
-          <div className={cn("absolute inset-y-0 left-0 w-1 opacity-50", config.bg.replace('/10', '/50'))} />
+          {/* Severity Indicator Bar */}
+          <div className={cn(
+            "absolute inset-y-0 left-0 w-1",
+            config.bg.replace('/10', '/80')
+          )} />
+          
+          {/* Hover Glow Effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-cyan)]/0 to-[var(--accent-blue)]/0 group-hover:from-[var(--accent-cyan)]/5 group-hover:to-[var(--accent-blue)]/5 pointer-events-none transition-all duration-500" />
           
           {depth > 0 && (
             <div className="absolute -left-4 top-1/2 h-px w-4 bg-zinc-700" />
           )}
 
-          <div className="flex items-start gap-4">
-            <div className={cn("mt-1 rounded-md p-2", config.bg)}>
+          <div className="flex items-start gap-4 relative z-10">
+            {/* Icon Badge */}
+            <div className={cn(
+              "mt-1 rounded-lg p-2.5 border",
+              config.bg,
+              config.border,
+              "shimmer-effect"
+            )}>
               <Icon className={cn("h-5 w-5", config.color)} />
             </div>
 
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <h3 className="font-mono text-sm font-bold text-zinc-100 group-hover:text-white">
+            <div className="flex-1 min-w-0">
+              {/* Title and Badges Row */}
+              <div className="flex items-start justify-between gap-3">
+                <h3 className="font-bold text-base text-white group-hover:text-glow-cyan transition-all flex-1 min-w-0">
                   {isNew ? (
                     <GlitchText text={node.name || 'Unknown'} severity={normalizedSeverity} glitchOnMount />
                   ) : (
                     node.name || 'Unknown'
                   )}
                 </h3>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-shrink-0">
                   {node.cve && (
-                    <span className="rounded bg-zinc-800 px-2 py-0.5 text-[10px] font-mono text-zinc-400">
+                    <span className="glass-panel px-2.5 py-1 text-[10px] font-mono font-bold text-[var(--accent-cyan)] border-[var(--accent-cyan)]/30">
                       {node.cve}
                     </span>
                   )}
                   <span className={cn(
-                    "rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
-                    config.bg,
-                    config.color
+                    "status-badge",
+                    `status-${normalizedSeverity}`
                   )}>
                     {node.severity}
                   </span>
                   {node.children && node.children.length > 0 && (
                     <ChevronRight className={cn(
-                      "h-4 w-4 text-zinc-500 transition-transform",
-                      isExpanded ? "rotate-90" : ""
+                      "h-4 w-4 text-[var(--foreground-tertiary)] transition-all duration-300",
+                      isExpanded ? "rotate-90 text-[var(--accent-cyan)]" : ""
                     )} />
                   )}
                 </div>
               </div>
-              <p className="mt-2 text-sm text-zinc-400 group-hover:text-zinc-300">
+              
+              {/* Description */}
+              <p className="mt-2.5 text-sm text-[var(--foreground-secondary)] leading-relaxed group-hover:text-[var(--foreground-primary)] transition-colors">
                 {node.description}
               </p>
 
@@ -231,31 +246,50 @@ function TreeNode({ node, depth = 0 }: { node: AttackTreeNode; depth?: number })
 export function AttackTree({ nodes }: AttackTreeProps) {
   if (nodes.length === 0) {
     return (
-      <div className="cyber-border flex h-[300px] flex-col items-center justify-center rounded-lg bg-zinc-950/80 p-8 text-center backdrop-blur-xl">
-        <Share2 className="mb-4 h-12 w-12 text-zinc-800" />
-        <h3 className="font-mono text-lg font-bold text-zinc-500">ATTACK TREE EMPTY</h3>
-        <p className="text-sm text-zinc-600">Waiting for intelligence gathering...</p>
+      <div className="glass-panel flex h-[350px] flex-col items-center justify-center rounded-xl p-8 text-center">
+        <div className="relative mb-6">
+          <div className="absolute inset-0 animate-ping rounded-full bg-[var(--accent-cyan)]/20 opacity-75" />
+          <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent-cyan)]/20 to-[var(--accent-blue)]/10 border border-[var(--border-primary)]">
+            <Share2 className="h-10 w-10 text-[var(--foreground-tertiary)]" />
+          </div>
+        </div>
+        <h3 className="text-xl font-bold text-white mb-2">ATTACK TREE EMPTY</h3>
+        <p className="metadata-label">Waiting for intelligence gathering...</p>
       </div>
     );
   }
 
   return (
-    <div className="cyber-border rounded-lg bg-zinc-950/80 p-6 backdrop-blur-xl">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="flex items-center gap-2 text-lg font-bold text-white">
-          <Share2 className="h-5 w-5 text-red-500" />
-          <span className="text-red-500">ATTACK VECTOR MAP</span>
-        </h2>
-        <div className="flex gap-2">
-          {Object.keys(severityConfig).map((severity) => (
-            <div key={severity} className="flex items-center gap-1.5">
-              <div className={cn("h-2 w-2 rounded-full", severityConfig[severity as keyof typeof severityConfig].bg.replace('/10', ''))} />
-              <span className="text-[10px] uppercase text-zinc-500">{severity}</span>
+    <div className="glass-panel-elevated rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="border-b border-[var(--border-accent)] bg-gradient-to-r from-[var(--status-critical)]/5 to-[var(--status-high)]/5 px-6 py-3.5">
+        <div className="flex items-center justify-between flex-wrap gap-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--status-critical)]/10 border border-[var(--status-critical)]/30">
+              <Share2 className="h-4 w-4 text-[var(--status-critical)]" />
             </div>
-          ))}
+            <h2 className="text-sm font-bold text-white uppercase tracking-wide">
+              <span className="text-glow-cyan">ATTACK VECTOR MAP</span>
+            </h2>
+          </div>
+          
+          {/* Severity Legend */}
+          <div className="flex gap-3">
+            {Object.keys(severityConfig).map((severity) => (
+              <div key={severity} className="flex items-center gap-1.5">
+                <div className={cn(
+                  "h-2 w-2 rounded-full",
+                  severityConfig[severity as keyof typeof severityConfig].bg.replace('/10', '/80')
+                )} />
+                <span className="metadata-label">{severity}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="space-y-4">
+      
+      {/* Tree Nodes */}
+      <div className="p-5 space-y-4 max-h-[600px] overflow-y-auto">
         {nodes.map(node => (
           <TreeNode key={node.id} node={node} />
         ))}

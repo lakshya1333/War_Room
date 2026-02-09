@@ -32,37 +32,49 @@ export function ThinkingDisplay({ steps }: ThinkingDisplayProps) {
 
   if (steps.length === 0) {
     return (
-      <div className="cyber-border flex h-[400px] flex-col items-center justify-center rounded-lg bg-zinc-950/80 p-8 text-center backdrop-blur-xl">
+      <div className="glass-panel flex h-[450px] flex-col items-center justify-center rounded-xl p-8 text-center">
         <div className="relative mb-6">
-          <div className="absolute inset-0 animate-ping rounded-full bg-red-500/20 opacity-75" />
-          <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800">
-            <Brain className="h-10 w-10 text-zinc-600" />
+          <div className="absolute inset-0 animate-ping rounded-full bg-[var(--accent-blue)]/20 opacity-75" />
+          <div className="relative flex h-24 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--accent-blue)]/20 to-[var(--accent-cyan)]/10 border border-[var(--accent-blue)]/30 shimmer-effect">
+            <Brain className="h-12 w-12 text-[var(--accent-blue)]" />
           </div>
         </div>
-        <h3 className="text-xl font-bold text-zinc-300">NEURAL ENGINE STANDBY</h3>
-        <p className="mt-2 text-sm text-zinc-500">Awaiting target parameters for analysis...</p>
+        <h3 className="text-2xl font-bold text-white mb-2">NEURAL ENGINE STANDBY</h3>
+        <p className="metadata-label">Awaiting target parameters for analysis...</p>
+        <div className="mt-6 flex items-center gap-2">
+          <div className="h-1.5 w-1.5 rounded-full bg-[var(--accent-blue)] animate-pulse" style={{ animationDelay: '0s' }} />
+          <div className="h-1.5 w-1.5 rounded-full bg-[var(--accent-blue)] animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <div className="h-1.5 w-1.5 rounded-full bg-[var(--accent-blue)] animate-pulse" style={{ animationDelay: '0.4s' }} />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="cyber-border flex h-[600px] flex-col overflow-hidden rounded-lg bg-zinc-950/80 backdrop-blur-xl">
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-zinc-800 bg-zinc-900/50 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <Cpu className="h-4 w-4 text-purple-500 animate-pulse" />
-          <span className="font-mono text-sm font-bold text-purple-400">GEMINI ALPHA 2.0 // THINKING_MODE</span>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-zinc-500">
-          <Activity className="h-3 w-3" />
-          <span>PROCESSING</span>
+    <div className="glass-panel-elevated flex h-[650px] flex-col overflow-hidden rounded-xl">
+      {/* Enhanced Header */}
+      <div className="border-b border-[var(--border-accent)] bg-gradient-to-r from-[var(--accent-blue)]/10 to-[var(--accent-cyan)]/5 px-6 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--accent-blue)]/10 border border-[var(--accent-blue)]/30">
+              <Cpu className="h-4 w-4 text-[var(--accent-blue)] animate-pulse" />
+            </div>
+            <div>
+              <span className="font-mono text-sm font-bold text-[var(--accent-blue)]">GEMINI 2.0 FLASH</span>
+              <p className="metadata-label mt-0.5">Extended Thinking Mode Active</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 glass-panel px-3 py-1.5 rounded-lg">
+            <Activity className="h-3.5 w-3.5 text-[var(--status-success)] animate-pulse" />
+            <span className="metadata-label">PROCESSING</span>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
+      {/* Enhanced Content Stream */}
       <div 
         ref={containerRef}
-        className="flex-1 space-y-4 overflow-y-auto p-4 font-mono scroll-smooth"
+        className="flex-1 space-y-3 overflow-y-auto p-6 scroll-smooth"
       >
         <AnimatePresence mode="popLayout">
           {steps.map((step, index) => {
@@ -72,28 +84,43 @@ export function ThinkingDisplay({ steps }: ThinkingDisplayProps) {
                 key={step.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                transition={{ 
+                  type: "spring",
+                  stiffness: 100,
+                  damping: 20,
+                  delay: index * 0.05 
+                }}
                 className={cn(
-                  "relative border-l-2 pl-4 transition-colors",
-                  isActive ? "border-purple-500 bg-purple-500/5" : "border-zinc-800"
+                  "relative border-l-2 pl-5 py-3 rounded-r-lg transition-all duration-300",
+                  isActive 
+                    ? "border-[var(--accent-blue)] bg-gradient-to-r from-[var(--accent-blue)]/10 to-transparent" 
+                    : "border-[var(--border-primary)] hover:border-[var(--accent-cyan)]/30"
                 )}
               >
-                <div className="mb-1 flex items-center gap-2 text-xs uppercase tracking-wider">
+                {/* Step Header */}
+                <div className="mb-2 flex items-center gap-3">
                   <span className={cn(
-                    "font-bold",
-                    isActive ? "text-purple-400" : "text-zinc-600"
+                    "font-bold metadata-label",
+                    isActive ? "text-[var(--accent-blue)]" : "text-[var(--foreground-tertiary)]"
                   )}>
-                    Step 0{step.step}
+                    STEP {String(step.step).padStart(2, '0')}
                   </span>
-                  <span className="text-zinc-700">
-                    [{new Date(step.timestamp).toLocaleTimeString()}]
+                  <span className="metadata-label text-[var(--foreground-tertiary)]">
+                    {new Date(step.timestamp).toLocaleTimeString()}
                   </span>
+                  {isActive && (
+                    <span className="flex items-center gap-1.5 glass-panel px-2 py-0.5 rounded">
+                      <span className="flex h-1.5 w-1.5 rounded-full bg-[var(--accent-blue)] animate-pulse" />
+                      <span className="metadata-label text-[var(--accent-blue)]">LIVE</span>
+                    </span>
+                  )}
                 </div>
                 
+                {/* Thought Content */}
                 <div className="prose prose-invert max-w-none">
                   <p className={cn(
-                    "text-sm leading-relaxed",
-                    isActive ? "text-zinc-200" : "text-zinc-500"
+                    "text-sm leading-relaxed font-mono",
+                    isActive ? "text-white" : "text-[var(--foreground-secondary)]"
                   )}>
                     {isActive ? (
                       <TypewriterText text={step.thought} />
@@ -103,10 +130,14 @@ export function ThinkingDisplay({ steps }: ThinkingDisplayProps) {
                   </p>
                 </div>
                 
+                {/* Active Indicator */}
                 {isActive && (
                   <motion.div
-                    layoutId="cursor"
-                    className="absolute -left-[5px] top-0 h-full w-[2px] bg-purple-500 shadow-[0_0_10px_rgba(168,85,247,0.5)]"
+                    layoutId="activeCursor"
+                    className="absolute -left-[5px] top-0 h-full w-[3px] rounded-full bg-[var(--accent-blue)]"
+                    style={{
+                      boxShadow: '0 0 10px var(--accent-blue-glow), 0 0 20px var(--accent-blue-glow)'
+                    }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   />
                 )}
@@ -115,9 +146,10 @@ export function ThinkingDisplay({ steps }: ThinkingDisplayProps) {
           })}
         </AnimatePresence>
         
-        {/* Loading Indicator */}
-        <div className="flex items-center gap-2 px-4 py-2 text-xs text-zinc-600">
-          <span className="animate-pulse">_</span>
+        {/* Thinking Cursor */}
+        <div className="flex items-center gap-2 pl-5 py-2">
+          <span className="h-3 w-0.5 bg-[var(--accent-blue)] animate-pulse" />
+          <span className="metadata-label text-[var(--accent-blue)] animate-pulse">Analyzing...</span>
         </div>
       </div>
     </div>

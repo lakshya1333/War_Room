@@ -46,14 +46,14 @@ export function MatrixRain() {
         // Random character
         const char = charArray[Math.floor(Math.random() * charArray.length)];
         
-        // Color gradient - brightest at the tip
+        // Enhanced gradient with cyan/blue theme
         const gradient = ctx.createLinearGradient(
           0, drops[i] * fontSize - fontSize * 10,
           0, drops[i] * fontSize
         );
-        gradient.addColorStop(0, 'rgba(0, 255, 0, 0.1)');
-        gradient.addColorStop(0.5, 'rgba(0, 255, 0, 0.5)');
-        gradient.addColorStop(1, 'rgba(0, 255, 0, 1)');
+        gradient.addColorStop(0, 'rgba(0, 139, 139, 0.1)'); // Dark Cyan
+        gradient.addColorStop(0.5, 'rgba(0, 139, 139, 0.4)');
+        gradient.addColorStop(1, 'rgba(0, 139, 139, 0.8)'); // Bright Cyan
         
         ctx.fillStyle = gradient;
         ctx.fillText(char, i * fontSize, drops[i] * fontSize);
@@ -80,7 +80,7 @@ export function MatrixRain() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-0 pointer-events-none opacity-20"
+      className="fixed inset-0 z-0 pointer-events-none opacity-15"
       style={{ mixBlendMode: 'screen' }}
     />
   );
